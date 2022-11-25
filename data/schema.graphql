@@ -1,0 +1,34 @@
+type Project {
+    id: ID!
+    name: String!
+    createdAt: String!
+    order: Float!
+}
+
+type ProjectEdge {
+    cursor: String!
+    node: Project!
+}
+
+type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+}
+
+type ProjectConnection {
+    edges: [ProjectEdge!]!
+    pageInfo: PageInfo!
+}
+
+type Query {
+    projects: ProjectConnection!
+}
+
+type Mutation {
+    createProject(name: String!): Project!
+    updateProject(id: ID!, name: String!): Project!
+    deleteProject(id: ID!): Project!
+    reorderProject(id: ID!, newOrder: Float!): Project!
+}
