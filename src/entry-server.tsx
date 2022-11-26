@@ -13,7 +13,7 @@ export function render(url: string): Promise<PipeableStream> {
       </StaticRouter>,
       {
         onError: reject,
-        onShellReady() {
+        onAllReady() {
           accept(stream);
         },
       }

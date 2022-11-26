@@ -1,0 +1,62 @@
+.project-list {
+}
+
+.project-list .wrapper {
+    position: relative;
+    padding: 60px 0;
+    display: grid;
+}
+
+.project-row {
+    display: flex;
+    width: 100%;
+    background-color: #FDFDFD;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    gap: 24px;
+    padding: 0 24px;
+    align-items: center;
+    height: 70px;
+}
+
+.project-row .icon {
+    width: 32px;
+    height: 32px;
+}
+
+.project-row .name {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    color: rgba(0, 0, 0, 0.7);
+    min-width: 200px;
+}
+
+.project-row .actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.icon-button:hover svg.icon * {
+    fill-opacity: 0.6;
+}
+
+.project-row .created-date {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 30px;
+    color: rgba(0, 0, 0, 0.5);
+}

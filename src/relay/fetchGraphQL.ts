@@ -8,7 +8,6 @@ export async function fetchGraphQL(
   }
 
   try {
-    console.log("Fetching GraphQL");
     const response = await fetch(endPoint, {
       method: "POST",
       headers: {
@@ -20,7 +19,6 @@ export async function fetchGraphQL(
       }),
     });
 
-    console.log("OK!!");
     return await response.json();
   } catch (error) {
     console.log("Error fetching GraphQL", error);

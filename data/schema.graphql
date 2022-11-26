@@ -23,7 +23,7 @@ type ProjectConnection {
 }
 
 type Query {
-    projects: ProjectConnection!
+    projects(first: String): ProjectConnection!
 }
 
 type Mutation {
