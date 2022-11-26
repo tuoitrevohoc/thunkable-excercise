@@ -7,6 +7,7 @@ import moment from "moment";
 import { FormEvent, useMemo, useState } from "react";
 import useDeleteProjectMutation from "../../mutations/projects/DeleteProjectMutation";
 import useRenameProjectMutation from "../../mutations/projects/RenameProjectMutation";
+import WarningDialog from "../ui/WarningDialog";
 
 interface Props {
   project: ProjectRow_project$key;
@@ -27,6 +28,7 @@ export default function ProjectRow(props: Props) {
 
   const [showRename, setShowRename] = useState(false);
   const [name, setName] = useState(project.name);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const [deleteProject, isDeleting] = useDeleteProjectMutation();
   const [renameProject, isRenaming] = useRenameProjectMutation();
@@ -73,7 +75,16 @@ export default function ProjectRow(props: Props) {
         <button
           className="icon-button"
           disabled={isDeleting}
-          onClick={() =>
+          onClick={() => setShowDeleteConfirmation(true)}
+        >
+          <DeleteIcon />
+        </button>
+      </div>
+      {showDeleteConfirmation && (
+        <WarningDialog
+          title="Are you sure you want to delete this project?"
+          message="This action can't be undone."
+          onConfirm={() =>
             deleteProject({
               variables: {
                 id: project.id,
@@ -81,10 +92,9 @@ export default function ProjectRow(props: Props) {
               },
             })
           }
-        >
-          <DeleteIcon />
-        </button>
-      </div>
+          onClose={() => setShowDeleteConfirmation(false)}
+        />
+      )}
     </div>
   );
 }
