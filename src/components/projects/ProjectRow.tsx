@@ -8,6 +8,7 @@ import { FormEvent, useMemo, useState } from "react";
 import useDeleteProjectMutation from "../../mutations/projects/DeleteProjectMutation";
 import useRenameProjectMutation from "../../mutations/projects/RenameProjectMutation";
 import WarningDialog from "../ui/WarningDialog";
+import ProjectRenameForm from "./ProjectRenameForm";
 
 interface Props {
   project: ProjectRow_project$key;
@@ -27,15 +28,13 @@ export default function ProjectRow(props: Props) {
   );
 
   const [showRename, setShowRename] = useState(false);
-  const [name, setName] = useState(project.name);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const [deleteProject, isDeleting] = useDeleteProjectMutation();
   const [renameProject, isRenaming] = useRenameProjectMutation();
 
   const onRename = useMemo(
-    () => (event: FormEvent) => {
-      event.preventDefault();
+    () => (name: string) => {
       renameProject({
         variables: {
           id: project.id,
@@ -43,35 +42,40 @@ export default function ProjectRow(props: Props) {
         },
         onCompleted: () => setShowRename(false),
       });
-      return false;
     },
-    [project.id, name, renameProject]
+    [project.id, renameProject]
   );
 
   return (
     <div className="project-row">
       <img className="icon" src={DefaultProjectIcon} alt="Project Icon" />
-      {showRename ? (
-        <form className="name form" onSubmit={onRename}>
-          <input
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+      <div className={`details ${showRename && "showing-rename"}`}>
+        {showRename ? (
+          <ProjectRenameForm
+            key={project.id}
+            name={project.name}
+            onRename={onRename}
             disabled={isRenaming}
           />
-        </form>
-      ) : (
-        <>
-          <div className="name">{project.name}</div>
-          <button className="icon-button" onClick={() => setShowRename(true)}>
-            <EditIcon />
-          </button>
-        </>
-      )}
-      <div className="created-date">
-        {moment(+project.createdAt).format("MMM DD, YYYY hh:mm A")}
+        ) : (
+          <>
+            <div className="name">{project.name}</div>
+            <button className="icon-button" onClick={() => setShowRename(true)}>
+              <EditIcon />
+            </button>
+          </>
+        )}
+        <div className="created-date">
+          {moment(+project.createdAt).format("MMM DD, YYYY hh:mm A")}
+        </div>
       </div>
       <div className="actions">
+        <button
+          className="icon-button mobile-only"
+          onClick={() => setShowRename(true)}
+        >
+          <EditIcon />
+        </button>
         <button
           className="icon-button"
           disabled={isDeleting}

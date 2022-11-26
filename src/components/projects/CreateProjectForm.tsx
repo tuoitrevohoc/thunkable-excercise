@@ -41,6 +41,7 @@ export default function CreateProjectForm(props: Props) {
         type="text"
         placeholder="Project name"
         disabled={isCreating}
+        ref={(element) => element?.focus()}
       />
     </form>
   );

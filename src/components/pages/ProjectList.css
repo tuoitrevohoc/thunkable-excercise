@@ -33,9 +33,15 @@
     min-width: 250px;
 }
 
+.project-row .details {
+    flex-grow: 1;
+    display: flex;
+}
+
 .project-row .actions {
     display: flex;
     justify-content: flex-end;
+    gap: 12px;
 }
 
 .icon-button {
@@ -68,4 +74,38 @@
     font-size: 20px;
     line-height: 30px;
     font-family: "Source Sans Pro", Avenir, Helvetica, Arial, sans-serif;
+}
+
+.project-row .mobile-only.icon-button {
+    display: none;
+}
+
+
+@media screen and (max-width: 650px) {
+    .project-list {
+        margin-top: 124px;
+    }
+
+    .project-row {
+        height: 86px;
+    }
+    .project-row .details {
+        flex-direction: column;
+    }
+
+    .project-row .details .icon-button {
+        display: none;
+    }
+
+    .project-row .details.showing-rename .created-date {
+        display: none;
+    }
+
+    .project-row .details .created-date {
+        justify-content: flex-start;
+    }
+
+    .project-row .mobile-only.icon-button {
+        display: flex;
+    }
 }

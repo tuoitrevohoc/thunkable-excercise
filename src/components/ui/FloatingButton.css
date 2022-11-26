@@ -25,3 +25,12 @@
     top: -30px;
     right: 20px;
 }
+
+@media screen and (max-width: 650px){
+    .floating-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        top: auto;
+    }
+}

@@ -7,9 +7,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.1);
     transition-duration: 0.3s;
     animation: fadeIn 0.3s ease-in-out;
+    z-index: 100;
 }
 
 .dialog-background .warning-dialog {
@@ -17,12 +18,20 @@
     width: 430px;
     height: 190px;
     background-color: #EEEFF3;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: row;
     padding: 24px;
     transition-duration: 0.3s;
     animation: popUp 0.3s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-background .warning-dialog .content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-grow: 1;
 }
 
 .warning-dialog .title {
@@ -98,5 +107,28 @@
     }
     100% {
         opacity: 1;
+    }
+}
+
+
+@media screen and (max-width: 650px) {
+    .dialog-background .warning-dialog {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+    }
+
+    .dialog-background .warning-dialog .actions {
+        display: flex;
+        gap: 8px;
+        flex-direction: column-reverse;
+    }
+
+    .dialog-background .warning-dialog .actions .button {
+        width: 100%;
+        margin-top: 8px;
+        height: 44px;
+        justify-content: center;
     }
 }
