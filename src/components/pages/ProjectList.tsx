@@ -49,7 +49,10 @@ export default function ProjectList() {
             />
           ))}
           {showAddProject && (
-            <CreateProjectForm connectionKey={projects.__id} />
+            <CreateProjectForm
+              connectionKey={projects.__id}
+              onClose={() => setShowAddProject(false)}
+            />
           )}
         </div>
       </div>

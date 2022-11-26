@@ -30,7 +30,7 @@
     font-size: 20px;
     line-height: 30px;
     color: rgba(0, 0, 0, 0.7);
-    min-width: 200px;
+    min-width: 250px;
 }
 
 .project-row .actions {
@@ -59,4 +59,13 @@
     font-size: 14px;
     line-height: 30px;
     color: rgba(0, 0, 0, 0.5);
+}
+
+.project-row input {
+    padding: 2px 5px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    font-family: "Source Sans Pro", Avenir, Helvetica, Arial, sans-serif;
 }

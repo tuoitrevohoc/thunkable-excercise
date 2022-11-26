@@ -1,33 +1,31 @@
 import DefaultProjectIcon from "../assets/DefaultProjectIcon.png";
 import "./CreateProjectForm.css";
 import { FormEvent, useState } from "react";
-import { graphql, useMutation } from "react-relay";
+import useCreateProjectMutation from "../../mutations/projects/CreateProjectMutation";
 
 interface Props {
   connectionKey: string;
+  onClose(): any;
 }
 
 export default function CreateProjectForm(props: Props) {
   const [name, setName] = useState("");
 
-  const [commit, isLoading] = useMutation(graphql`
-    mutation CreateProjectFormMutation($name: String!, $connection: [ID!]!) {
-      createProject(name: $name)
-        @appendNode(connections: $connection, edgeTypeName: "ProjectEdge") {
-        id
-        ...ProjectRow_project
-      }
-    }
-  `);
+  const [createProject, isCreating] = useCreateProjectMutation();
 
   function onSave(event: FormEvent) {
     event.preventDefault();
 
-    commit({
+    if (isCreating) {
+      return;
+    }
+
+    createProject({
       variables: {
         name: name,
         connection: [props.connectionKey],
       },
+      onCompleted: props.onClose,
     });
 
     return false;
@@ -42,6 +40,7 @@ export default function CreateProjectForm(props: Props) {
         className="text"
         type="text"
         placeholder="Project name"
+        disabled={isCreating}
       />
     </form>
   );

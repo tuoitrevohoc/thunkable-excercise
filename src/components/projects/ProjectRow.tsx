@@ -4,6 +4,9 @@ import DefaultProjectIcon from "../assets/DefaultProjectIcon.png";
 import DeleteIcon from "../icons/DeleteIcon";
 import EditIcon from "../icons/EditIcon";
 import moment from "moment";
+import { FormEvent, useMemo, useState } from "react";
+import useDeleteProjectMutation from "../../mutations/projects/DeleteProjectMutation";
+import useRenameProjectMutation from "../../mutations/projects/RenameProjectMutation";
 
 interface Props {
   project: ProjectRow_project$key;
@@ -22,30 +25,54 @@ export default function ProjectRow(props: Props) {
     props.project
   );
 
-  const [deleteProject, isDeleting] = useMutation(graphql`
-    mutation ProjectRowDeleteProjectMutation($id: ID!, $connections: [ID!]!) {
-      deleteProject(id: $id) {
-        id @deleteEdge(connections: $connections)
-      }
-    }
-  `);
+  const [showRename, setShowRename] = useState(false);
+  const [name, setName] = useState(project.name);
 
-  console.log(props.connectionKey);
+  const [deleteProject, isDeleting] = useDeleteProjectMutation();
+  const [renameProject, isRenaming] = useRenameProjectMutation();
+
+  const onRename = useMemo(
+    () => (event: FormEvent) => {
+      event.preventDefault();
+      renameProject({
+        variables: {
+          id: project.id,
+          name: name,
+        },
+        onCompleted: () => setShowRename(false),
+      });
+      return false;
+    },
+    [project.id, name, renameProject]
+  );
 
   return (
     <div className="project-row">
       <img className="icon" src={DefaultProjectIcon} alt="Project Icon" />
-      <div className="name">{project.name}</div>
-      <button className="icon-button">
-        <EditIcon />
-      </button>
+      {showRename ? (
+        <form className="name form" onSubmit={onRename}>
+          <input
+            type="text"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            disabled={isRenaming}
+          />
+        </form>
+      ) : (
+        <>
+          <div className="name">{project.name}</div>
+          <button className="icon-button" onClick={() => setShowRename(true)}>
+            <EditIcon />
+          </button>
+        </>
+      )}
       <div className="created-date">
         {moment(+project.createdAt).format("MMM DD, YYYY hh:mm A")}
       </div>
-
       <div className="actions">
         <button
           className="icon-button"
+          disabled={isDeleting}
           onClick={() =>
             deleteProject({
               variables: {
