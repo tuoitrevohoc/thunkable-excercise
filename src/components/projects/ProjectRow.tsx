@@ -4,7 +4,7 @@ import DefaultProjectIcon from "../assets/DefaultProjectIcon.png";
 import DeleteIcon from "../icons/DeleteIcon";
 import EditIcon from "../icons/EditIcon";
 import moment from "moment";
-import { FormEvent, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import useDeleteProjectMutation from "../../mutations/projects/DeleteProjectMutation";
 import useRenameProjectMutation from "../../mutations/projects/RenameProjectMutation";
 import WarningDialog from "../ui/WarningDialog";
@@ -60,7 +60,10 @@ export default function ProjectRow(props: Props) {
         ) : (
           <>
             <div className="name">{project.name}</div>
-            <button className="icon-button" onClick={() => setShowRename(true)}>
+            <button
+              className="icon-button edit-button"
+              onClick={() => setShowRename(true)}
+            >
               <EditIcon />
             </button>
           </>
@@ -71,7 +74,7 @@ export default function ProjectRow(props: Props) {
       </div>
       <div className="actions">
         <button
-          className="icon-button mobile-only"
+          className="icon-button mobile-only edit-button"
           onClick={() => setShowRename(true)}
         >
           <EditIcon />

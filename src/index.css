@@ -16,7 +16,6 @@
 
 * {
   box-sizing: border-box;
-  transition-duration: 0.2s;
 }
 
 body {
@@ -26,7 +25,7 @@ body {
 
 svg.icon * {
   fill: black;
-  fill-opacity: 0.1;
+  fill-opacity: 0.3;
 }
 
 svg.icon:hover {

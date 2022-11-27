@@ -8,6 +8,13 @@ import AddIcon from "../icons/AddIcon";
 import ProjectRow from "../projects/ProjectRow";
 import { useMemo, useState } from "react";
 import CreateProjectForm from "../projects/CreateProjectForm";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
+import useReorderProjectMutation from "../../mutations/projects/ReorderProjectMutation";
 
 export const query = graphql`
   query ProjectListQuery {
@@ -16,6 +23,8 @@ export const query = graphql`
       edges {
         node {
           id
+          order
+          name
           ...ProjectRow_project
         }
       }
@@ -26,28 +35,102 @@ export const query = graphql`
 export default function ProjectList() {
   const { projects } = useLazyLoadQuery<ProjectListQuery>(query, {});
   const [showAddProject, setShowAddProject] = useState(false);
-  console.log(projects);
+  const [updateOrder, isUpdatingOrder] = useReorderProjectMutation();
+
+  const sortedProjects = [...projects.edges].sort(
+    (a, b) => a.node.order - b.node.order
+  );
 
   const addProject = useMemo(
     () => () => setShowAddProject(true),
     [setShowAddProject]
   );
 
+  const onDragEnd = useMemo(
+    () =>
+      ({ source, destination }: DropResult) => {
+        const sourceIndex = source.index;
+        const destinationIndex = destination?.index;
+
+        if (
+          destinationIndex !== undefined &&
+          destinationIndex !== sourceIndex
+        ) {
+          const project = sortedProjects[sourceIndex].node;
+          let newOrder: number;
+
+          if (sourceIndex > destinationIndex) {
+            if (destinationIndex === 0) {
+              newOrder = sortedProjects[0].node.order - 1;
+            } else {
+              const previousProject = sortedProjects[destinationIndex - 1].node;
+              const nextProject = sortedProjects[destinationIndex].node;
+              newOrder = (previousProject.order + nextProject.order) / 2;
+            }
+          } else {
+            if (destinationIndex === sortedProjects.length - 1) {
+              newOrder = sortedProjects[destinationIndex].node.order + 1;
+            } else {
+              const previousProject = sortedProjects[destinationIndex].node;
+              const nextProject = sortedProjects[destinationIndex + 1].node;
+              newOrder = (previousProject.order + nextProject.order) / 2;
+            }
+          }
+
+          updateOrder({
+            variables: {
+              id: project.id,
+              order: newOrder,
+            },
+            optimisticResponse: {
+              reorderProject: {
+                id: project.id,
+                order: newOrder,
+              },
+            },
+          });
+        }
+      },
+    [sortedProjects, updateOrder]
+  );
+
   return (
-    <div>
+    <DragDropContext onDragEnd={onDragEnd}>
       <Header title="My Projects" />
       <div className="project-list">
         <div className="wrapper">
           <FloatingButton onClick={addProject}>
             <AddIcon />
           </FloatingButton>
-          {projects.edges.map((edge) => (
-            <ProjectRow
-              project={edge.node}
-              key={edge.node.id}
-              connectionKey={projects.__id}
-            />
-          ))}
+          <Droppable droppableId="projects">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef}>
+                {sortedProjects.map((edge, index) => (
+                  <Draggable
+                    key={edge.node.id}
+                    draggableId={edge.node.id}
+                    index={index}
+                  >
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className={`${snapshot.isDragging && "dragging"}`}
+                      >
+                        <ProjectRow
+                          project={edge.node}
+                          key={edge.node.id}
+                          connectionKey={projects.__id}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
           {showAddProject && (
             <CreateProjectForm
               connectionKey={projects.__id}
@@ -56,6 +139,6 @@ export default function ProjectList() {
           )}
         </div>
       </div>
-    </div>
+    </DragDropContext>
   );
 }

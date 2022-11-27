@@ -3,20 +3,21 @@ import Project from "../models/Project";
 class ProjectService {
   projects: Project[] = [];
   lastId = 1;
+  lastOrder = 1;
 
   async findProjects(): Promise<Project[]> {
-    console.log("Resolving projects");
     return this.projects;
   }
 
   async createProject(name: string): Promise<Project> {
     this.lastId++;
+    this.lastOrder++;
 
     const project: Project = {
       id: this.lastId.toString(),
       name,
       createdAt: new Date(),
-      order: this.lastId,
+      order: this.lastOrder,
     };
 
     this.projects.push(project);
@@ -50,6 +51,7 @@ class ProjectService {
     }
 
     project.order = newOrder;
+    this.lastOrder = Math.max(this.lastOrder, newOrder);
     return project;
   }
 }

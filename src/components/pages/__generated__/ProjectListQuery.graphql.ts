@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3824bfbc63c5f24518cdd282b22a7884>>
+ * @generated SignedSource<<f3ed91fa89815cfdf46aec85e5d3c205>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,8 @@ export type ProjectListQuery$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
+        readonly name: string;
+        readonly order: number;
         readonly " $fragmentSpreads": FragmentRefs<"ProjectRow_project">;
       };
     }>;
@@ -39,17 +41,31 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "order",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "cursor",
+  "name": "name",
   "storageKey": null
 },
 v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "cursor",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -74,7 +90,7 @@ v3 = {
   ],
   "storageKey": null
 },
-v4 = {
+v6 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -86,7 +102,7 @@ v4 = {
     }
   ]
 },
-v5 = [
+v7 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -125,21 +141,23 @@ return {
                 "plural": false,
                 "selections": [
                   (v0/*: any*/),
+                  (v1/*: any*/),
+                  (v2/*: any*/),
                   {
                     "args": null,
                     "kind": "FragmentSpread",
                     "name": "ProjectRow_project"
                   },
-                  (v1/*: any*/)
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
-          (v3/*: any*/),
-          (v4/*: any*/)
+          (v5/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
@@ -155,7 +173,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v7/*: any*/),
         "concreteType": "ProjectConnection",
         "kind": "LinkedField",
         "name": "projects",
@@ -178,13 +196,8 @@ return {
                 "plural": false,
                 "selections": [
                   (v0/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
+                  (v1/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -192,22 +205,22 @@ return {
                     "name": "createdAt",
                     "storageKey": null
                   },
-                  (v1/*: any*/)
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
-          (v3/*: any*/),
-          (v4/*: any*/)
+          (v5/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": "projects(first:\"\")"
       },
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v7/*: any*/),
         "filters": null,
         "handle": "connection",
         "key": "ProjectList_projects",
@@ -217,7 +230,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9d579536341f8b1eacfdaf46b2f616ea",
+    "cacheID": "c715cac725bf70954b0608c50a587a99",
     "id": null,
     "metadata": {
       "connection": [
@@ -233,11 +246,11 @@ return {
     },
     "name": "ProjectListQuery",
     "operationKind": "query",
-    "text": "query ProjectListQuery {\n  projects(first: \"\") {\n    edges {\n      node {\n        id\n        ...ProjectRow_project\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ProjectRow_project on Project {\n  id\n  name\n  createdAt\n}\n"
+    "text": "query ProjectListQuery {\n  projects(first: \"\") {\n    edges {\n      node {\n        id\n        order\n        name\n        ...ProjectRow_project\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ProjectRow_project on Project {\n  id\n  name\n  createdAt\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9f5a109748a7282a5439249d29aa043f";
+(node as any).hash = "f9e25e0ce00fb02fe94e2904bfbe909e";
 
 export default node;

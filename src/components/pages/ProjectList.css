@@ -80,6 +80,17 @@
     display: none;
 }
 
+.dragging .project-row {
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.15);
+}
+
+.edit-button svg.icon * {
+    fill-opacity: 0.5;
+}
+
+.edit-button:hover svg.icon * {
+    fill-opacity: 0.8;
+}
 
 @media screen and (max-width: 650px) {
     .project-list {
