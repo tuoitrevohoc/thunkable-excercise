@@ -1,10 +1,8 @@
 import { Environment, Network, RecordSource, Store } from "relay-runtime";
-import { fetchGraphQL } from "./fetchGraphQL";
+import { fetchGraphQL, subscribe } from "./fetchGraphQL";
 
 export default () =>
   new Environment({
-    network: Network.create((params, variables) =>
-      fetchGraphQL(params.text!, variables)
-    ),
+    network: Network.create(fetchGraphQL, subscribe),
     store: new Store(new RecordSource()),
   });

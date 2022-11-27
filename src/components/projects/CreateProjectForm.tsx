@@ -1,7 +1,7 @@
 import DefaultProjectIcon from "../assets/DefaultProjectIcon.png";
 import "./CreateProjectForm.css";
 import { FormEvent, useState } from "react";
-import useCreateProjectMutation from "../../mutations/projects/CreateProjectMutation";
+import useCreateProjectMutation from "../../relay/mutations/projects/CreateProjectMutation";
 
 interface Props {
   connectionKey: string;

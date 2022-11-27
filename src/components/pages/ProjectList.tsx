@@ -14,7 +14,8 @@ import {
   Droppable,
   DropResult,
 } from "react-beautiful-dnd";
-import useReorderProjectMutation from "../../mutations/projects/ReorderProjectMutation";
+import useReorderProjectMutation from "../../relay/mutations/projects/ReorderProjectMutation";
+import useProjectListSubscription from "../../relay/subscriptions/ProjectListSubscription";
 
 export const query = graphql`
   query ProjectListQuery {
@@ -36,6 +37,7 @@ export default function ProjectList() {
   const { projects } = useLazyLoadQuery<ProjectListQuery>(query, {});
   const [showAddProject, setShowAddProject] = useState(false);
   const [updateOrder, isUpdatingOrder] = useReorderProjectMutation();
+  useProjectListSubscription(projects.__id);
 
   const sortedProjects = [...projects.edges].sort(
     (a, b) => a.node.order - b.node.order

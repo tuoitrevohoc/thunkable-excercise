@@ -37,10 +37,10 @@ export const resolvers = {
       subscribe: () => pubsub.asyncIterator("PROJECT_CREATED"),
     },
     projectDeleted: {
-      subscribe: () => pubsub.asyncIterator("PROJECT_CREATED"),
+      subscribe: () => pubsub.asyncIterator("PROJECT_DELETED"),
     },
     projectUpdated: {
-      subscribe: () => pubsub.asyncIterator("PROJECT_CREATED"),
+      subscribe: () => pubsub.asyncIterator("PROJECT_UPDATED"),
     },
   },
 };

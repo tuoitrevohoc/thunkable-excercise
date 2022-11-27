@@ -5,8 +5,8 @@ import DeleteIcon from "../icons/DeleteIcon";
 import EditIcon from "../icons/EditIcon";
 import moment from "moment";
 import { useMemo, useState } from "react";
-import useDeleteProjectMutation from "../../mutations/projects/DeleteProjectMutation";
-import useRenameProjectMutation from "../../mutations/projects/RenameProjectMutation";
+import useDeleteProjectMutation from "../../relay/mutations/projects/DeleteProjectMutation";
+import useRenameProjectMutation from "../../relay/mutations/projects/RenameProjectMutation";
 import WarningDialog from "../ui/WarningDialog";
 import ProjectRenameForm from "./ProjectRenameForm";
 

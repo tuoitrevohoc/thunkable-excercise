@@ -1,5 +1,14 @@
+import { Observable, PayloadData, RequestParameters } from "relay-runtime";
+import { type Client, createClient, ExecutionResult, Sink } from "graphql-ws";
+import { RelayObservable } from "relay-runtime/lib/network/RelayObservable";
+import { Disposable } from "relay-runtime/lib/util/RelayRuntimeTypes";
+import {
+  GraphQLResponse,
+  PayloadExtensions,
+} from "relay-runtime/lib/network/RelayNetworkTypes";
+
 export async function fetchGraphQL(
-  query: string,
+  request: RequestParameters,
   variables: Record<string, unknown> = {}
 ) {
   let endPoint = "/graphql";
@@ -14,7 +23,7 @@ export async function fetchGraphQL(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        query,
+        query: request.text!,
         variables,
       }),
     });
@@ -23,4 +32,33 @@ export async function fetchGraphQL(
   } catch (error) {
     console.log("Error fetching GraphQL", error);
   }
+}
+
+let wsClient: Client | undefined;
+
+export function subscribe(
+  operation: RequestParameters,
+  variables: Record<string, unknown> = {}
+): RelayObservable<GraphQLResponse> | Disposable {
+  if (typeof window === "undefined") {
+    // no subscribe on server
+    return Observable.from([]);
+  }
+
+  if (!wsClient) {
+    wsClient = createClient({
+      url: "ws://localhost:5173/graphql",
+    });
+  }
+
+  return Observable.create((sink) => {
+    return wsClient!.subscribe(
+      {
+        operationName: operation.name,
+        query: operation.text!,
+        variables,
+      },
+      sink as unknown as Sink<ExecutionResult<PayloadData, PayloadExtensions>>
+    );
+  });
 }
