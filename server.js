@@ -6,6 +6,11 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import bodyParser from "body-parser";
 import { PassThrough } from "stream";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { WebSocketServer } from "ws";
+import http from "http";
+import { useServer } from "graphql-ws/lib/use/ws";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,6 +26,7 @@ export async function createServer(
     : "";
 
   const app = express();
+  const httpServer = http.createServer(app);
 
   /**
    * @type {import('vite').ViteDevServer}
@@ -58,9 +64,36 @@ export async function createServer(
     const { resolvers } = await vite.ssrLoadModule(
       resolve("src/backend/resolvers.ts")
     );
-    const server = new ApolloServer({
+
+    const schema = makeExecutableSchema({
       typeDefs: fs.readFileSync(resolve("data/schema.graphql"), "utf8"),
       resolvers,
+    });
+
+    // set up websocket server
+    const wsServer = new WebSocketServer({
+      path: "/graphql",
+      server: httpServer,
+    });
+
+    const serverCleanUp = useServer({ schema }, wsServer);
+    const server = new ApolloServer({
+      schema,
+      typeDefs: fs.readFileSync(resolve("data/schema.graphql"), "utf8"),
+      resolvers,
+      plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer }),
+        {
+          async serverWillStart() {
+            console.log("Server starting up!");
+            return {
+              async drainServer() {
+                await serverCleanUp.dispose();
+              },
+            };
+          },
+        },
+      ],
     });
 
     await server.start();
@@ -102,11 +135,11 @@ export async function createServer(
     }
   });
 
-  return { app, vite };
+  return { app, vite, httpServer };
 }
 
-createServer().then(({ app }) =>
-  app.listen(5173, () => {
+createServer().then(({ httpServer }) =>
+  httpServer.listen(5173, () => {
     console.log("http://localhost:5173");
   })
 );

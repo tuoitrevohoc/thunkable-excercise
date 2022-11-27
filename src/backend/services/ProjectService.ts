@@ -1,4 +1,5 @@
 import Project from "../models/Project";
+import pubsub from "../pubsub";
 
 class ProjectService {
   projects: Project[] = [];
@@ -21,6 +22,7 @@ class ProjectService {
     };
 
     this.projects.push(project);
+    await pubsub.publish("PROJECT_CREATED", { projectCreated: project });
     return project;
   }
 
@@ -31,6 +33,7 @@ class ProjectService {
     }
 
     project.name = name;
+    await pubsub.publish("PROJECT_UPDATED", { projectUpdated: project });
     return project;
   }
 
@@ -41,6 +44,7 @@ class ProjectService {
     }
 
     this.projects = this.projects.filter((project) => project.id !== id);
+    await pubsub.publish("PROJECT_DELETED", { projectDeleted: project });
     return project;
   }
 
@@ -52,6 +56,7 @@ class ProjectService {
 
     project.order = newOrder;
     this.lastOrder = Math.max(this.lastOrder, newOrder);
+    await pubsub.publish("PROJECT_UPDATED", { projectUpdated: project });
     return project;
   }
 }

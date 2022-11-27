@@ -32,3 +32,10 @@ type Mutation {
     deleteProject(id: ID!): Project!
     reorderProject(id: ID!, newOrder: Float!): Project!
 }
+
+type Subscription {
+    projectCreated: Project!
+    projectUpdated: Project!
+    projectDeleted: Project!
+}
+
