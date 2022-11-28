@@ -9,7 +9,7 @@
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server && vite build --ssr src/backend/resolvers.ts --outDir dist/api",
-    "serve": "NODE_ENV=production node server",
+    "serve": "NODE_ENV=production node --experimental-fetch server",
     "relay": "relay-compiler"
   },
   "dependencies": {
