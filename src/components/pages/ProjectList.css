@@ -23,7 +23,7 @@
     gap: 24px;
     padding: 0 24px;
     align-items: center;
-    height: 70px;
+    min-height: 70px;
     background-color: #fff;
 }
 
@@ -115,7 +115,7 @@
     }
 
     .project-row {
-        height: 86px;
+        min-height: 86px;
     }
     .project-row .details {
         flex-direction: column;
