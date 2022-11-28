@@ -22,10 +22,18 @@ export default function WarningDialog(props: Props) {
           </div>
         </div>
         <div className="actions">
-          <button onClick={props.onClose} className="secondary button">
+          <button
+            onClick={props.onClose}
+            className="secondary button"
+            aria-label="Cancel this action"
+          >
             No
           </button>
-          <button onClick={props.onConfirm} className="primary button">
+          <button
+            onClick={props.onConfirm}
+            className="primary button"
+            aria-label="Confirm this action"
+          >
             Yes
           </button>
         </div>

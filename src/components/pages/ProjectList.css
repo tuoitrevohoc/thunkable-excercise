@@ -78,10 +78,13 @@
 .project-row input {
     padding: 2px 5px;
     font-style: normal;
-    font-weight: 600;
-    font-size: 20px;
+    font-weight: 400;
+    font-size: 16px;
     line-height: 30px;
-    font-family: "Source Sans Pro", Avenir, Helvetica, Arial, sans-serif;
+}
+
+.project-row input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
 }
 
 .project-row .mobile-only.icon-button {
