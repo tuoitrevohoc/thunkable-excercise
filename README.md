@@ -26,6 +26,8 @@ This is a simple app written in:
 
 ## How to run
 
+Requirement: node >= 17.5 as this project is using "fetch" which is only available in node 17.5 and above.
+
 1. Clone the repo
 2. Run `npm install`
 3. Run `npm run dev`

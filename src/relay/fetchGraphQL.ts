@@ -48,8 +48,12 @@ export function subscribe(
   }
 
   if (!wsClient) {
+    const isSecure = window.location.protocol === "https:";
+    const wsProtocol = isSecure ? "wss:" : "ws:";
+    const url = `${wsProtocol}//${window.location.host}/graphql`;
+
     wsClient = createClient({
-      url: "ws://localhost:5173/graphql",
+      url,
     });
   }
 
