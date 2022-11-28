@@ -16,6 +16,7 @@ import {
 import useReorderProjectMutation from "../../relay/mutations/projects/ReorderProjectMutation";
 import useProjectListSubscription from "../../relay/subscriptions/ProjectListSubscription";
 import classNames from "classnames";
+import ErrorPopup from "~/components/ui/ErrorPopup";
 
 const CreateProjectForm = React.lazy(
   () => import("../projects/CreateProjectForm")
@@ -41,6 +42,8 @@ export default function ProjectList() {
   const { projects } = useLazyLoadQuery<ProjectListQuery>(query, {});
   const [showAddProject, setShowAddProject] = useState(false);
   const [updateOrder, isUpdatingOrder] = useReorderProjectMutation();
+  const [error, setError] = useState<string | null>(null);
+
   useProjectListSubscription(projects.__id);
 
   const sortedProjects = [...projects.edges].sort(
@@ -93,6 +96,9 @@ export default function ProjectList() {
                 id: project.id,
                 order: newOrder,
               },
+            },
+            onError() {
+              setError("Can't reorder project. Please try again later.");
             },
           });
         }
@@ -151,6 +157,7 @@ export default function ProjectList() {
             )}
           </div>
         </div>
+        <ErrorPopup errorMessage={error} onDismiss={() => setError(null)} />
       </div>
     </DragDropContext>
   );

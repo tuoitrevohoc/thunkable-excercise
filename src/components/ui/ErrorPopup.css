@@ -1,0 +1,38 @@
+.error-popup {
+    display: flex;
+    position: fixed;
+    bottom: 20px;
+    height: 50px;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 600px;
+    align-items: center;
+    gap: 20px;
+    padding: 24px 16px;
+    left: calc(50% - 175px);
+    border-radius: 5px;
+    background: #EEEFF3;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    color: #000;
+    font-size: 16px;
+    animation: pullIn 0.3s ease-in-out;
+}
+
+
+@media screen and (max-width: 600px){
+    .error-popup {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding-bottom: 50px;
+    }
+}
+
+@keyframes pullIn {
+    0% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}

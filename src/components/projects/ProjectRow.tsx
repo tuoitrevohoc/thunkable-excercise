@@ -9,6 +9,7 @@ import useDeleteProjectMutation from "../../relay/mutations/projects/DeleteProje
 import useRenameProjectMutation from "../../relay/mutations/projects/RenameProjectMutation";
 import classNames from "classnames";
 import { validName } from "~/backend/models/ProjectValidator";
+import ErrorPopup from "~/components/ui/ErrorPopup";
 
 const WarningDialog = React.lazy(() => import("../ui/WarningDialog"));
 const ProjectRenameForm = React.lazy(() => import("./ProjectRenameForm"));
@@ -32,6 +33,7 @@ export default function ProjectRow(props: Props) {
 
   const [showRename, setShowRename] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [deleteProject, isDeleting] = useDeleteProjectMutation();
   const [renameProject, isRenaming] = useRenameProjectMutation();
@@ -45,6 +47,9 @@ export default function ProjectRow(props: Props) {
             name: name,
           },
           onCompleted: () => setShowRename(false),
+          onError() {
+            setError("Can't update project. Please try again later.");
+          },
         });
       }
     },
@@ -112,11 +117,15 @@ export default function ProjectRow(props: Props) {
                 id: project.id,
                 connections: [props.connectionKey],
               },
+              onError() {
+                setError("Can't delete project. Please try again later.");
+              },
             })
           }
           onClose={() => setShowDeleteConfirmation(false)}
         />
       )}
+      <ErrorPopup errorMessage={error} onDismiss={() => setError(null)} />
     </div>
   );
 }

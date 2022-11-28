@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import useCreateProjectMutation from "../../relay/mutations/projects/CreateProjectMutation";
 import classNames from "classnames";
 import { validName } from "~/backend/models/ProjectValidator";
+import ErrorPopup from "~/components/ui/ErrorPopup";
 
 interface Props {
   connectionKey: string;
@@ -12,6 +13,7 @@ interface Props {
 
 export default function CreateProjectForm(props: Props) {
   const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const [createProject, isCreating] = useCreateProjectMutation();
 
@@ -22,12 +24,17 @@ export default function CreateProjectForm(props: Props) {
       return;
     }
 
+    setError(null);
+
     createProject({
       variables: {
         name: name,
         connection: [props.connectionKey],
       },
       onCompleted: props.onClose,
+      onError() {
+        setError("Can't create project. Please try again later.");
+      },
     });
 
     return false;
@@ -48,6 +55,7 @@ export default function CreateProjectForm(props: Props) {
         disabled={isCreating}
         ref={(element) => element?.focus()}
       />
+      <ErrorPopup errorMessage={error} onDismiss={() => setError(null)} />
     </form>
   );
 }
