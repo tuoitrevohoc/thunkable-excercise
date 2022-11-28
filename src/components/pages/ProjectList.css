@@ -93,6 +93,12 @@
 }
 
 @media screen and (max-width: 650px) {
+
+    .project-row .name {
+        min-width: auto;
+        flex-grow: 2;
+    }
+
     .project-list {
         margin-top: 124px;
     }

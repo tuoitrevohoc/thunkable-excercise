@@ -15,6 +15,7 @@ import {
 } from "react-beautiful-dnd";
 import useReorderProjectMutation from "../../relay/mutations/projects/ReorderProjectMutation";
 import useProjectListSubscription from "../../relay/subscriptions/ProjectListSubscription";
+import classNames from "classnames";
 
 const CreateProjectForm = React.lazy(
   () => import("../projects/CreateProjectForm")
@@ -102,9 +103,11 @@ export default function ProjectList() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Header title="My Projects" />
-      <div className="project-list">
+      <div
+        className={classNames("project-list top", { loading: isUpdatingOrder })}
+      >
         <div className="wrapper">
-          <FloatingButton onClick={addProject}>
+          <FloatingButton onClick={addProject} title="Create new Project">
             <AddIcon />
           </FloatingButton>
           <Droppable droppableId="projects">

@@ -7,7 +7,7 @@ import {
   ReorderProjectInput,
   UpdateProjectInput,
 } from "./models/relay-api";
-import pubsub from "./pubsub";
+import pubSub from "./pubsub";
 
 export const resolvers = {
   Query: {
@@ -34,13 +34,13 @@ export const resolvers = {
   },
   Subscription: {
     projectCreated: {
-      subscribe: () => pubsub.asyncIterator("PROJECT_CREATED"),
+      subscribe: () => pubSub.asyncIterator("PROJECT_CREATED"),
     },
     projectDeleted: {
-      subscribe: () => pubsub.asyncIterator("PROJECT_DELETED"),
+      subscribe: () => pubSub.asyncIterator("PROJECT_DELETED"),
     },
     projectUpdated: {
-      subscribe: () => pubsub.asyncIterator("PROJECT_UPDATED"),
+      subscribe: () => pubSub.asyncIterator("PROJECT_UPDATED"),
     },
   },
 };

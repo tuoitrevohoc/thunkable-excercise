@@ -2,6 +2,8 @@ import DefaultProjectIcon from "../assets/DefaultProjectIcon.png";
 import "./CreateProjectForm.css";
 import { FormEvent, useState } from "react";
 import useCreateProjectMutation from "../../relay/mutations/projects/CreateProjectMutation";
+import classNames from "classnames";
+import { validName } from "~/backend/models/ProjectValidator";
 
 interface Props {
   connectionKey: string;
@@ -16,7 +18,7 @@ export default function CreateProjectForm(props: Props) {
   function onSave(event: FormEvent) {
     event.preventDefault();
 
-    if (isCreating) {
+    if (isCreating || !validName(name)) {
       return;
     }
 
@@ -32,7 +34,10 @@ export default function CreateProjectForm(props: Props) {
   }
 
   return (
-    <form className="project-row" onSubmit={onSave}>
+    <form
+      className={classNames("project-row", { loading: isCreating })}
+      onSubmit={onSave}
+    >
       <img className="icon" src={DefaultProjectIcon} alt="Project Icon" />
       <input
         value={name}

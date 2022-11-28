@@ -3,6 +3,7 @@ import RelayEnvironment from "./relay/RelayEnvironment";
 import { RelayEnvironmentProvider } from "~/relay";
 
 import "./App.css";
+import ErrorBoundary from "~/components/ui/ErrorBoundary";
 
 const ProjectList = React.lazy(() => import("./components/pages/ProjectList"));
 
@@ -11,9 +12,11 @@ function App() {
 
   return (
     <RelayEnvironmentProvider environment={environment}>
-      <Suspense fallback={<div>Loading..</div>}>
-        <ProjectList />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<div>Loading..</div>}>
+          <ProjectList />
+        </Suspense>
+      </ErrorBoundary>
     </RelayEnvironmentProvider>
   );
 }

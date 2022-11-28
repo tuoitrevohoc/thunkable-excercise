@@ -7,6 +7,8 @@ import moment from "moment";
 import React, { useMemo, useState } from "react";
 import useDeleteProjectMutation from "../../relay/mutations/projects/DeleteProjectMutation";
 import useRenameProjectMutation from "../../relay/mutations/projects/RenameProjectMutation";
+import classNames from "classnames";
+import { validName } from "~/backend/models/ProjectValidator";
 
 const WarningDialog = React.lazy(() => import("../ui/WarningDialog"));
 const ProjectRenameForm = React.lazy(() => import("./ProjectRenameForm"));
@@ -36,21 +38,27 @@ export default function ProjectRow(props: Props) {
 
   const onRename = useMemo(
     () => (name: string) => {
-      renameProject({
-        variables: {
-          id: project.id,
-          name: name,
-        },
-        onCompleted: () => setShowRename(false),
-      });
+      if (validName(name)) {
+        renameProject({
+          variables: {
+            id: project.id,
+            name: name,
+          },
+          onCompleted: () => setShowRename(false),
+        });
+      }
     },
     [project.id, renameProject]
   );
 
   return (
-    <div className="project-row">
+    <div
+      className={classNames("project-row", {
+        loading: isDeleting || isRenaming,
+      })}
+    >
       <img className="icon" src={DefaultProjectIcon} alt="Project Icon" />
-      <div className={`details ${showRename && "showing-rename"}`}>
+      <div className={classNames("details", { "showing-rename": showRename })}>
         {showRename ? (
           <ProjectRenameForm
             key={project.id}
@@ -63,6 +71,8 @@ export default function ProjectRow(props: Props) {
             <div className="name">{project.name}</div>
             <button
               className="icon-button edit-button"
+              title="Edit this project"
+              aria-label="Edit this project"
               onClick={() => setShowRename(true)}
             >
               <EditIcon />
@@ -76,6 +86,8 @@ export default function ProjectRow(props: Props) {
       <div className="actions">
         <button
           className="icon-button mobile-only edit-button"
+          title="Edit this project"
+          aria-label="Edit this project"
           onClick={() => setShowRename(true)}
         >
           <EditIcon />
@@ -83,6 +95,8 @@ export default function ProjectRow(props: Props) {
         <button
           className="icon-button"
           disabled={isDeleting}
+          title="Delete this project"
+          aria-label="Delete this project"
           onClick={() => setShowDeleteConfirmation(true)}
         >
           <DeleteIcon />
