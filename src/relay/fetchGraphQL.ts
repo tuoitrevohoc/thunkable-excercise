@@ -12,8 +12,13 @@ export async function fetchGraphQL(
   variables: Record<string, unknown> = {}
 ) {
   let endPoint = "/graphql";
+  let fetch: any;
+
   if (typeof window === "undefined") {
     endPoint = "http://localhost:5173/graphql";
+    fetch = await import("node-fetch");
+  } else {
+    fetch = window.fetch;
   }
 
   try {
