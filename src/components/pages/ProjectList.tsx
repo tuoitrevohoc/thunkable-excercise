@@ -102,49 +102,54 @@ export default function ProjectList() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Header title="My Projects" />
-      <div
-        className={classNames("project-list top", { loading: isUpdatingOrder })}
-      >
-        <div className="wrapper">
-          <FloatingButton onClick={addProject} title="Create new Project">
-            <AddIcon />
-          </FloatingButton>
-          <Droppable droppableId="projects">
-            {(provided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
-                {sortedProjects.map((edge, index) => (
-                  <Draggable
-                    key={edge.node.id}
-                    draggableId={edge.node.id}
-                    index={index}
-                  >
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className={`${snapshot.isDragging && "dragging"}`}
-                      >
-                        <ProjectRow
-                          project={edge.node}
-                          key={edge.node.id}
-                          connectionKey={projects.__id}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
+      <div className="page">
+        <Header title="My Projects" />
+        <div
+          className={classNames("project-list top", {
+            loading: isUpdatingOrder,
+            empty: sortedProjects.length === 0 && !showAddProject,
+          })}
+        >
+          <div className="wrapper">
+            <FloatingButton onClick={addProject} title="Create new Project">
+              <AddIcon />
+            </FloatingButton>
+            <Droppable droppableId="projects">
+              {(provided) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {sortedProjects.map((edge, index) => (
+                    <Draggable
+                      key={edge.node.id}
+                      draggableId={edge.node.id}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={`${snapshot.isDragging && "dragging"}`}
+                        >
+                          <ProjectRow
+                            project={edge.node}
+                            key={edge.node.id}
+                            connectionKey={projects.__id}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+            {showAddProject && (
+              <CreateProjectForm
+                connectionKey={projects.__id}
+                onClose={() => setShowAddProject(false)}
+              />
             )}
-          </Droppable>
-          {showAddProject && (
-            <CreateProjectForm
-              connectionKey={projects.__id}
-              onClose={() => setShowAddProject(false)}
-            />
-          )}
+          </div>
         </div>
       </div>
     </DragDropContext>

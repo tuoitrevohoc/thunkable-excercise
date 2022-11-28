@@ -1,22 +1,30 @@
-.project-list {
-}
-
 .project-list .wrapper {
     position: relative;
     padding: 60px 0;
     display: grid;
 }
 
-.project-row {
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-list.empty {
+    background-color: #fff;
+    flex-grow: 1;
+}
+
+.project-list .project-row {
     display: flex;
     width: 100%;
-    background-color: #FDFDFD;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     gap: 24px;
     padding: 0 24px;
     align-items: center;
     height: 70px;
+    background-color: #fff;
 }
 
 .project-row .icon {
