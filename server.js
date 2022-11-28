@@ -60,45 +60,48 @@ export async function createServer(
     );
   }
 
+  let resolvers;
+
   if (!isProd) {
-    const { resolvers } = await vite.ssrLoadModule(
-      resolve("src/backend/resolvers.ts")
-    );
-
-    const schema = makeExecutableSchema({
-      typeDefs: fs.readFileSync(resolve("data/schema.graphql"), "utf8"),
-      resolvers,
-    });
-
-    // set up websocket server
-    const wsServer = new WebSocketServer({
-      path: "/graphql",
-      server: httpServer,
-    });
-
-    const serverCleanUp = useServer({ schema }, wsServer);
-    const server = new ApolloServer({
-      schema,
-      typeDefs: fs.readFileSync(resolve("data/schema.graphql"), "utf8"),
-      resolvers,
-      plugins: [
-        ApolloServerPluginDrainHttpServer({ httpServer }),
-        {
-          async serverWillStart() {
-            console.log("Server starting up!");
-            return {
-              async drainServer() {
-                await serverCleanUp.dispose();
-              },
-            };
-          },
-        },
-      ],
-    });
-
-    await server.start();
-    app.use("/graphql", bodyParser.json(), expressMiddleware(server));
+    resolvers = (await vite.ssrLoadModule(resolve("src/backend/resolvers.ts")))
+      .resolvers;
+  } else {
+    resolvers = (await import("./dist/api/resolvers.js")).resolvers;
   }
+
+  const schema = makeExecutableSchema({
+    typeDefs: fs.readFileSync(resolve("data/schema.graphql"), "utf8"),
+    resolvers,
+  });
+
+  // set up websocket server
+  const wsServer = new WebSocketServer({
+    path: "/graphql",
+    server: httpServer,
+  });
+
+  const serverCleanUp = useServer({ schema }, wsServer);
+  const server = new ApolloServer({
+    schema,
+    typeDefs: fs.readFileSync(resolve("data/schema.graphql"), "utf8"),
+    resolvers,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          console.log("Server starting up!");
+          return {
+            async drainServer() {
+              await serverCleanUp.dispose();
+            },
+          };
+        },
+      },
+    ],
+  });
+
+  await server.start();
+  app.use("/graphql", bodyParser.json(), expressMiddleware(server));
 
   app.use("*", async (req, res) => {
     try {

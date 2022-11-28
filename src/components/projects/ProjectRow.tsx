@@ -1,14 +1,15 @@
-import { graphql, useFragment, useMutation } from "react-relay";
+import { graphql, useFragment } from "~/relay";
 import { ProjectRow_project$key } from "./__generated__/ProjectRow_project.graphql";
 import DefaultProjectIcon from "../assets/DefaultProjectIcon.png";
 import DeleteIcon from "../icons/DeleteIcon";
 import EditIcon from "../icons/EditIcon";
 import moment from "moment";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import useDeleteProjectMutation from "../../relay/mutations/projects/DeleteProjectMutation";
 import useRenameProjectMutation from "../../relay/mutations/projects/RenameProjectMutation";
-import WarningDialog from "../ui/WarningDialog";
-import ProjectRenameForm from "./ProjectRenameForm";
+
+const WarningDialog = React.lazy(() => import("../ui/WarningDialog"));
+const ProjectRenameForm = React.lazy(() => import("./ProjectRenameForm"));
 
 interface Props {
   project: ProjectRow_project$key;

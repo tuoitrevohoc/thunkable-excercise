@@ -1,4 +1,4 @@
-import { graphql, useMutation } from "react-relay";
+import { graphql, useMutation } from "~/relay";
 
 export default function useCreateProjectMutation() {
   return useMutation(graphql`

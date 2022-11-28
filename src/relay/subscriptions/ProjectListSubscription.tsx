@@ -1,4 +1,4 @@
-import { graphql, useSubscription } from "react-relay";
+import { graphql, useSubscription } from "~/relay";
 import { useMemo } from "react";
 
 export default function useProjectListSubscription(connectionKey: string) {

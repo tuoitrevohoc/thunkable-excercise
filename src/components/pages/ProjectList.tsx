@@ -1,4 +1,4 @@
-import { graphql, useLazyLoadQuery } from "react-relay";
+import { graphql, useLazyLoadQuery } from "~/relay";
 import { ProjectListQuery } from "./__generated__/ProjectListQuery.graphql";
 import Header from "../ui/Header";
 
@@ -6,8 +6,7 @@ import FloatingButton from "../ui/FloatingButton";
 import "./ProjectList.css";
 import AddIcon from "../icons/AddIcon";
 import ProjectRow from "../projects/ProjectRow";
-import { useMemo, useState } from "react";
-import CreateProjectForm from "../projects/CreateProjectForm";
+import React, { useMemo, useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -16,6 +15,10 @@ import {
 } from "react-beautiful-dnd";
 import useReorderProjectMutation from "../../relay/mutations/projects/ReorderProjectMutation";
 import useProjectListSubscription from "../../relay/subscriptions/ProjectListSubscription";
+
+const CreateProjectForm = React.lazy(
+  () => import("../projects/CreateProjectForm")
+);
 
 export const query = graphql`
   query ProjectListQuery {
