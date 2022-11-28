@@ -14,6 +14,51 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+async function setUpGraphQLServer(isProd, httpServer, vite, resolve) {
+  let resolvers;
+
+  if (!isProd) {
+    resolvers = (await vite.ssrLoadModule(resolve("src/backend/resolvers.ts")))
+      .resolvers;
+  } else {
+    resolvers = (await import("./dist/api/resolvers.js")).resolvers;
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs: fs.readFileSync(resolve("data/schema.graphql"), "utf8"),
+    resolvers,
+  });
+
+  // set up websocket server
+  const wsServer = new WebSocketServer({
+    path: "/graphql",
+    server: httpServer,
+  });
+
+  const serverCleanUp = useServer({ schema }, wsServer);
+  const server = new ApolloServer({
+    schema,
+    typeDefs: fs.readFileSync(resolve("data/schema.graphql"), "utf8"),
+    resolvers,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          console.log("Server starting up!");
+          return {
+            async drainServer() {
+              await serverCleanUp.dispose();
+            },
+          };
+        },
+      },
+    ],
+  });
+
+  await server.start();
+  return server;
+}
+
 export async function createServer(
   root = process.cwd(),
   isProd = process.env.NODE_ENV === "production",
@@ -60,48 +105,14 @@ export async function createServer(
     );
   }
 
-  let resolvers;
+  const apolloServer = await setUpGraphQLServer(
+    isProd,
+    httpServer,
+    vite,
+    resolve
+  );
 
-  if (!isProd) {
-    resolvers = (await vite.ssrLoadModule(resolve("src/backend/resolvers.ts")))
-      .resolvers;
-  } else {
-    resolvers = (await import("./dist/api/resolvers.js")).resolvers;
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs: fs.readFileSync(resolve("data/schema.graphql"), "utf8"),
-    resolvers,
-  });
-
-  // set up websocket server
-  const wsServer = new WebSocketServer({
-    path: "/graphql",
-    server: httpServer,
-  });
-
-  const serverCleanUp = useServer({ schema }, wsServer);
-  const server = new ApolloServer({
-    schema,
-    typeDefs: fs.readFileSync(resolve("data/schema.graphql"), "utf8"),
-    resolvers,
-    plugins: [
-      ApolloServerPluginDrainHttpServer({ httpServer }),
-      {
-        async serverWillStart() {
-          console.log("Server starting up!");
-          return {
-            async drainServer() {
-              await serverCleanUp.dispose();
-            },
-          };
-        },
-      },
-    ],
-  });
-
-  await server.start();
-  app.use("/graphql", bodyParser.json(), expressMiddleware(server));
+  app.use("/graphql", bodyParser.json(), expressMiddleware(apolloServer));
 
   app.use("*", async (req, res) => {
     try {
