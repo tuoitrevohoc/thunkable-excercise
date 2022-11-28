@@ -65,5 +65,8 @@
       "**/__mocks__/**",
       "**/__generated__/**"
     ]
+  },
+  "engines": {
+    "node": "19.x"
   }
 }
