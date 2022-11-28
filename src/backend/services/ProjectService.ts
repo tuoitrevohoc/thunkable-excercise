@@ -14,8 +14,6 @@ class ProjectService {
     this.lastId++;
     this.lastOrder++;
 
-    throw new Error("Can't create project");
-
     const project: Project = {
       id: this.lastId.toString(),
       name,

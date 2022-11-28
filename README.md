@@ -20,8 +20,9 @@ This is a simple app written in:
 ## Some changes over the design
 
 - The backend code with graphql subscription that can synchronize the change across sessions
-- The warning dialog in mobile view is replaced by a Bottom Sheet.
+- The warning dialog in mobile view is replaced by a Bottom Sheet, this would be more convenient for mobile users
 - The error is displayed in a snackbar.
+- The loading state displayed as a simple scrollbar in the bottom of the component.
 
 ## How to run
 
