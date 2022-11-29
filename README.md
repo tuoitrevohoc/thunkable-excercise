@@ -44,7 +44,7 @@ GraphQL server using Apollo and graphql subscriptions using graphql-ws are also 
 
 ## How to test
 
-Open https://localhost:3000
+Open https://localhost:5173
 
 ## Folder Structure
 
