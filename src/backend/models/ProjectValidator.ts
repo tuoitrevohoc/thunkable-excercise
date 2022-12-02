@@ -1,3 +1,3 @@
 export function validName(name: string) {
-  return name.length > 0;
+  return name.trim().length > 0;
 }
